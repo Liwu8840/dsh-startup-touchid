@@ -197,6 +197,7 @@ function run(withSpeech, cfgOverride, fetchStub, environment = {}) {
     clearInterval() {},
     CustomEvent: function (t) { this.type = t },
   }
+  if (environment.reducedMotion) windowStub.matchMedia = () => ({ matches: true })
   if (withSpeech) {
     windowStub.speechSynthesis = makeSpeech()
     if (environment.voices) windowStub.speechSynthesis._voices = environment.voices
@@ -416,9 +417,7 @@ try {
     r = run(false, { theme: 'hud', bioGate: false, voice: false, sound: false, wakeAudio: '' }, fetchStub)
     await advanceUntil(r, () => r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
     r.nodes.get('.dsu-btn').dispatchEvent({ type: 'click', preventDefault() {} })
-    await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '连接账户' && !r.nodes.get('.dsu-btn').disabled)
-    key(r, 'Enter')
-    await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '确认服务状态' && !r.nodes.get('.dsu-btn').disabled)
+    await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '进入工作台' && !r.nodes.get('.dsu-btn').disabled)
     const nickname = r.nodes.get('.dsu-card').children[1].children[1].textContent
     check(state + ' 采用 HUD 且不冒用预设姓名', r.root.classList.contains('dsu-hud') && nickname === (state === 'signed-in' ? '<真实测试昵称>' : '—'))
     check(state + ' 不创建网页密码框', !r.nodes.get('.dsu-card').children.some(child => child.type === 'password'))
@@ -502,9 +501,8 @@ try {
   await advanceUntil(r, () => r.spoken.some(item => item.text === '验证通过，欢迎回来。'))
   check('系统实际成功后播放验证回应', r.spoken.some(item => item.text === '验证通过，欢迎回来。'))
   await advanceUntil(r, () => !r.nodes.get('.dsu-card').hidden && r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
-  key(r, 'Enter')
   await advanceUntil(r, () => r.spoken.some(item => item.text === '你还没有登录账户，可以进入工作台后再登录。'))
-  check('确认连接后播放真实账户结果', r.spoken.some(item => item.text === '你还没有登录账户，可以进入工作台后再登录。'))
+  check('验证后连接账户并播放真实结果', r.spoken.some(item => item.text === '你还没有登录账户，可以进入工作台后再登录。'))
   r.windowStub.__DSH_STARTUP_API__.skip()
 } catch (err) { check('系统验证语音与真实结果一致', false, err.stack) }
 
@@ -579,10 +577,6 @@ try {
   await advanceUntil(r, () => !r.nodes.get('.dsu-card').hidden && r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
   check('工作台出现前不播小余欢迎语', !r.spoken.some(item => item.text.includes('主人')))
   key(r, 'Enter')
-  for (const label of ['确认服务状态', '准备工作界面', '进入工作台']) {
-    await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === label && !r.nodes.get('.dsu-btn').disabled)
-    key(r, 'Enter')
-  }
   await advanceUntil(r, () => r.spoken.some(item => item.text === '欢迎主人回来，我是你的AI助手小余。工作台已经准备好了，有什么需要，随时交给我吧。'))
   check('工作台出现后只播一遍指定欢迎语', r.spoken.filter(item => item.text === '欢迎主人回来，我是你的AI助手小余。工作台已经准备好了，有什么需要，随时交给我吧。').length === 1 && r.root.classList.contains('dsu-handoff'))
   check('欢迎语播放期间工作台可以点击和滚动', r.root.style.pointerEvents === 'none' && r.root.inert === true && !r.documentStub.documentElement.classList.contains('dsu-lock'))
@@ -620,8 +614,6 @@ try {
     r = run(true, { theme: 'hud', voiceLang: 'zh', voiceSource: 'tts', welcomeLine: '', bioGate: false }, async () => ({ json: async () => ({ ok: true, status, name: status === 'signed-in' ? '测试账户' : undefined }) }))
     await advanceUntil(r, () => r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
     key(r, 'Enter')
-    await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '连接账户' && !r.nodes.get('.dsu-btn').disabled)
-    key(r, 'Enter')
     await advanceUntil(r, () => r.spoken.some(item => item.text === expected))
     check(status + ' 播报实际账户结果', r.spoken.some(item => item.text === expected))
     if (status !== 'signed-in') check(status + ' 不播报账户已连接', !r.spoken.some(item => item.text === '账户已连接，正在为你准备工作台。'))
@@ -647,7 +639,7 @@ try {
   r.windowStub.__DSH_STARTUP_API__.skip()
 } catch (err) { check('新增语音与实际状态一致', false, err.stack) }
 
-console.log('\n[14] HUD 每次操作只响应当前阶段')
+console.log('\n[14] HUD 合并为验证与进入两次操作')
 try {
   let accountRequests = 0
   let resolveAccount
@@ -668,43 +660,55 @@ try {
   await advanceUntil(r, () => buttonReady('系统验证'))
   r.documentStub.dispatchEvent({ type: 'pointerdown', target: r.root })
   await flushVoice()
-  check('背景手势仅解锁声音，不自动播放欢迎或后续台词', r.spoken.every(item => !item.text.trim()))
+  check('背景手势只解锁声音，不抢播台词', r.spoken.every(item => !item.text.trim()))
   await remainAt('系统验证')
-  key(r, 'Enter')
-  await advanceUntil(r, () => buttonReady('连接账户'))
-  await remainAt('连接账户')
-  check('未点击连接账户前不会查询账户', accountRequests === 0)
+  check('未确认验证前不会查询账户', accountRequests === 0)
   key(r, 'Enter')
   key(r, 'Enter')
   await flushVoice()
-  check('查询尚未返回时重复点击不重复请求', accountRequests === 1 && r.nodes.get('.dsu-btn').disabled)
+  check('验证后自动查询账户，等待结果期间不重复请求', accountRequests === 1 && r.nodes.get('.dsu-btn').disabled)
   resolveAccount({ ok: true, status: 'signed-in', name: '测试账户' })
-  await advanceUntil(r, () => buttonReady('确认服务状态'))
-  await remainAt('确认服务状态')
-  check('账户回应之后不自行播服务、准备或进入台词', !r.spoken.some(item => ['本地服务已响应。', '正在为你准备工作界面。', '好的，这就为你打开工作台。'].includes(item.text)))
+  await advanceUntil(r, () => buttonReady('进入工作台'))
+  await remainAt('进入工作台')
+  check('只经过一次验证操作便到达最终确认', r.nodes.get('.dsu-stepcount').textContent.includes('02 / 02'))
+  check('等待进入时不播中间步骤或小余欢迎语', !r.spoken.some(item => ['本地服务已响应。', '一切就绪，我们开始吧。', '好的，这就为你打开工作台。'].includes(item.text) || item.text.includes('主人')))
+  r.nodes.get('.dsu-action').dispatchEvent({ type: 'click', target: r.nodes.get('.dsu-btn'), preventDefault() {} })
+  await remainAt('进入工作台')
+  r.documentStub.dispatchEvent({ type: 'keydown', key: 'Enter', repeat: true, preventDefault() {} })
+  await flushVoice()
+  check('点击冒泡及长按回车不会自动进入', buttonReady('进入工作台'))
   r.windowStub.__DSH_STARTUP_API__.speak('', '尚未结束的账户说明。')
   await advanceUntil(r, () => r.spoken.some(item => item.text === '尚未结束的账户说明。'))
   r.windowStub.__DSH_STARTUP_API__.speak('', '过期的排队说明。')
   const cancels = r.windowStub.speechSynthesis.cancelCalls
   key(r, 'Enter')
-  await advanceUntil(r, () => buttonReady('准备工作界面'))
   await flushVoice()
-  check('新操作停止旧语音，清除旧队列，只回应服务确认', r.windowStub.speechSynthesis.cancelCalls > cancels && r.spoken.some(item => item.text === '本地服务已响应。') && !r.spoken.some(item => item.text.includes('说明')))
-  r.nodes.get('.dsu-action').dispatchEvent({ type: 'click', target: r.nodes.get('.dsu-btn'), preventDefault() {} })
-  await remainAt('准备工作界面')
-  check('按钮点击冒泡不会继续确认下一步', buttonReady('准备工作界面'))
-  r.documentStub.dispatchEvent({ type: 'keydown', key: 'Enter', repeat: true, preventDefault() {} })
-  await flushVoice()
-  check('长按回车不会跨过下一阶段', buttonReady('准备工作界面'))
-  key(r, 'Enter')
-  await advanceUntil(r, () => buttonReady('进入工作台'))
-  await remainAt('进入工作台')
-  check('未点击进入工作台前不播小余欢迎语', !r.spoken.some(item => item.text.includes('主人')))
-  key(r, 'Enter')
+  check('最终点击取消旧队列，语音未结束也开始揭幕', r.windowStub.speechSynthesis.cancelCalls > cancels && r.root.classList.contains('dsu-handoff') && r.spoken.some(item => item.text === '好的，这就为你打开工作台。') && !r.spoken.some(item => item.text.includes('说明')))
+  check('HUD 收尾不启用旧闪屏或文字故障', !r.root.classList.contains('dsu-peak') && r.nodes.get('.dsu-flash').style.opacity !== '0.72' && !r.nodes.get('.dsu-w1').classList.contains('dsu-glitch'))
   await advanceUntil(r, () => r.spoken.some(item => item.text.includes('主人')))
-  check('最终确认后才揭幕并播放小余欢迎语', r.root.classList.contains('dsu-handoff'))
+  check('揭幕后才播放小余欢迎语并释放工作台点击', r.root.classList.contains('dsu-handoff') && r.root.inert === true)
   r.windowStub.__DSH_STARTUP_API__.skip()
-} catch (err) { check('按操作响应流程可执行', false, err.stack) }
+
+  r = run(true, { theme: 'hud', voiceLang: 'zh', voiceSource: 'tts', bioGate: false, identitySource: 'custom' })
+  await advanceUntil(r, () => r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
+  key(r, 'Enter')
+  await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '进入工作台' && !r.nodes.get('.dsu-btn').disabled)
+  key(r, 'Enter')
+  await flushVoice()
+  check('点击进入后立即开始淡出', r.root.classList.contains('dsu-handoff'))
+  r.windowStub.__DSH_STARTUP_API__.skip()
+  for (const timer of r.timers.splice(0)) timer.fn()
+  await flushVoice()
+  check('淡出中跳过不会被迟到回调恢复欢迎语', r.root.classList.contains('dsu-gone') && !r.spoken.some(item => item.text.includes('主人')))
+
+  r = run(false, { theme: 'hud', voice: false, sound: false, bioGate: false, identitySource: 'custom' }, undefined, { reducedMotion: true })
+  await advanceUntil(r, () => r.nodes.get('.dsu-btn').listeners.get('click')?.size > 0)
+  key(r, 'Enter')
+  await advanceUntil(r, () => r.nodes.get('.dsu-btn-zh').textContent === '进入工作台' && !r.nodes.get('.dsu-btn').disabled)
+  key(r, 'Enter')
+  await flushVoice()
+  check('减少动态效果模式使用短淡出并及时释放遮罩', r.root.inert === true && r.root.classList.contains('dsu-gone'))
+} catch (err) { check('两次确认与平滑揭幕可执行', false, err.stack) }
 
 console.log('\n============================')
 console.log(`  通过 ${pass} / 失败 ${fail}`)

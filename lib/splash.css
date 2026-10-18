@@ -1314,3 +1314,35 @@
 @media (prefers-reduced-motion: reduce) {
   .dsu-hud.dsu-impact .dsu-orbit svg { animation: none; }
 }
+
+/* HUD 收尾只合成透明度与光晕缩放，避免整屏模糊和文字故障叠加。 */
+#dsh-startup-root.dsu-hud.dsu-handoff {
+  transform: none;
+  filter: none;
+  transition: none;
+  will-change: opacity;
+  animation: dsu-hud-reveal var(--dsu-exit-duration, 1100ms) cubic-bezier(.25, .1, .25, 1) forwards;
+}
+.dsu-hud.dsu-exiting .dsu-bloom {
+  animation: dsu-hud-glow var(--dsu-exit-duration, 1100ms) ease-in-out forwards;
+}
+.dsu-hud.dsu-exiting .dsu-orbit { filter: none; transition: opacity 360ms ease; }
+.dsu-hud.dsu-exiting .dsu-orbit-ring,
+.dsu-hud.dsu-exiting .dsu-orbit::before,
+.dsu-hud.dsu-exiting .dsu-orbit::after,
+.dsu-hud.dsu-exiting .dsu-hud-bars i { animation-play-state: paused; }
+.dsu-hud.dsu-exiting .dsu-flash,
+.dsu-hud.dsu-exiting .dsu-streak,
+.dsu-hud.dsu-exiting .dsu-grain { display: none; }
+@keyframes dsu-hud-reveal {
+  0%, 14% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes dsu-hud-glow {
+  0% { opacity: 0; transform: scale(.88); }
+  32% { opacity: .65; }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsu-hud.dsu-exiting .dsu-bloom { display: none; }
+}

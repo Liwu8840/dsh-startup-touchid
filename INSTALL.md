@@ -2,17 +2,17 @@
 
 ## 安装
 
-从本仓库 Releases 下载 `dsh-startup-touchid-1.6.2.tgz`：
+从本仓库 Releases 下载 `dsh-startup-touchid-1.6.3.tgz`：
 
 ```sh
-dsh plugin --profile web add ./dsh-startup-touchid-1.6.2.tgz
+dsh plugin --profile web add ./dsh-startup-touchid-1.6.3.tgz
 ```
 
 或者克隆本仓库后自行打包：
 
 ```sh
 npm pack
-dsh plugin --profile web add ./dsh-startup-touchid-1.6.2.tgz
+dsh plugin --profile web add ./dsh-startup-touchid-1.6.3.tgz
 ```
 
 重启 `dsh web`，在「设置 → 启动动画」调整。使用 `dsh plugin add` 让宿主注册插件，不要只复制到 `node_modules`。如果以前手工添加过同名插件配置，请移除重复条目，避免注册两次。

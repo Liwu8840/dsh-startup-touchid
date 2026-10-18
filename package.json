@@ -1,6 +1,6 @@
 {
   "name": "dsh-startup-touchid",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "DeepSeek Harness 启动界面：蓝青 HUD、macOS 系统认证、真实 DeepSeek 账户状态和开机语音。密码仅由系统处理，账户昵称不写入插件配置。",
   "keywords": [
     "dsh",

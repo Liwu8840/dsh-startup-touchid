@@ -216,7 +216,7 @@
         <input type="range" id="fSpeed" min="0.35" max="3" step="0.05" value="1">
       </div>
     </div>
-    <div class="chk"><input type="checkbox" id="fInteract" checked><label for="fInteract">需要人工确认（HUD 每步等待操作）</label></div>
+    <div class="chk"><input type="checkbox" id="fInteract" checked><label for="fInteract">需要人工确认（HUD 仅验证和进入时确认）</label></div>
     <div class="chk"><input type="checkbox" id="fSkip" checked><label for="fSkip">允许跳过（右上角 SKIP / Esc）</label></div>
 
     <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:10px;display:flex;flex-direction:column;gap:10px">
@@ -265,7 +265,7 @@
 
     <div class="note">
       六段序列：<b>需要访问许可</b> → 身份资料确认 → 接收访问需求 → 读取完毕 → 验证通过 → 欢迎 xxx 访问。
-      HUD 每步等待操作（按钮 / Enter / 空格）。
+      HUD 仅验证和进入时确认（按钮 / Enter / 空格）。
     </div>
     <div class="note">离线预览不写入 DSH；正式插件的配置存在 <code>~/.dsh/dsh-startup.json</code>。</div>
   </div>
@@ -323,7 +323,7 @@
 
           <div class="__ss_group">
             <div class="__ss_groupTitle">交互</div>
-            <label class="__ss_check"><input type="checkbox" checked id="sInteract"><span class="__ss_checkText"><span>需要人工确认</span><span class="__ss_hint">HUD 每步等待按钮 / Enter / 空格；关闭则自动播放。</span></span></label>
+            <label class="__ss_check"><input type="checkbox" checked id="sInteract"><span class="__ss_checkText"><span>需要人工确认</span><span class="__ss_hint">HUD 只需验证和进入两次确认；关闭则自动播放。</span></span></label>
             <label class="__ss_check"><input type="checkbox" checked id="sSkip"><span class="__ss_checkText"><span>允许跳过</span><span class="__ss_hint">右上角显示 SKIP，按 Esc 也能直接进主界面。</span></span></label>
             <label class="__ss_check"><input type="checkbox" id="sSound"><span class="__ss_checkText"><span>音效</span><span class="__ss_hint">默认关闭；开启后交互确认时有轻微电子音。</span></span></label>
           </div>
