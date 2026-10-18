@@ -5,7 +5,7 @@
 如需尝试桌面端，先启动一次 DeepSeek Harness Desktop 初始化 profile，再完全退出：
 
 ```sh
-dsh plugin --profile desktop add ./dsh-startup-touchid-1.6.1.tgz
+dsh plugin --profile desktop add ./dsh-startup-touchid-1.6.2.tgz
 ```
 
 重新打开桌面端，在设置中检查「启动动画」。桌面端的插件管理方式可能随宿主版本变化，请优先使用宿主提供的管理入口。
