@@ -1,0 +1,18 @@
+name: 插件检查
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run test:release
+      - run: sh bin/build.sh "$RUNNER_TEMP/dsh-touchid-build"
+      - run: npm pack --dry-run

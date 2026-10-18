@@ -1,0 +1,83 @@
+{
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "-4%",
+  "pitch": "+2Hz",
+  "lines": {
+    "hud-welcome": "欢迎来到 DeepSeek Harness。我已准备好了，随时为你服务。",
+    "hud-welcome-classic": "欢迎来到 DeepSeek Harness。智能核心已上线。",
+    "hud-auth": "验证通过，欢迎回来。",
+    "hud-enter": "好的，这就为你打开工作台。",
+    "hud-account": "正在连接你的账户。",
+    "hud-local": "本地服务已响应。",
+    "hud-prepare": "正在为你准备工作界面。",
+    "hud-ready": "一切就绪，我们开始吧。",
+    "hud-entry": "欢迎主人回来，我是你的AI助手小余。",
+    "hud-auth-prompt": "请在系统面板完成验证，我在这里等你。",
+    "hud-account-ok": "账户已连接，正在为你准备工作台。",
+    "hud-account-out": "你还没有登录账户，可以进入工作台后再登录。",
+    "hud-account-error": "账户暂时没有连上，你可以进入工作台后再检查。",
+    "hud-auth-retry": "还没有完成验证，你可以再试一次。",
+    "hud-entry-extended": "欢迎主人回来，我是你的AI助手小余。工作台已经准备好了，有什么需要，随时交给我吧。"
+  },
+  "overrides": {
+    "hud-entry": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "-6%",
+      "pitch": "+6Hz"
+    },
+    "hud-auth-prompt": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "hud-account-ok": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "hud-account-out": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "hud-account-error": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "hud-auth-retry": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "hud-entry-extended": {
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    }
+  },
+  "rendered": {
+    "hud-welcome": "hud-welcome.m4a",
+    "hud-welcome-classic": "hud-welcome-classic.m4a",
+    "hud-auth": "hud-auth.m4a",
+    "hud-enter": "hud-enter.m4a",
+    "hud-account": "hud-account.m4a",
+    "hud-local": "hud-local.m4a",
+    "hud-prepare": "hud-prepare.m4a",
+    "hud-ready": "hud-ready.m4a",
+    "hud-entry": "hud-entry.m4a",
+    "hud-auth-prompt": "hud-auth-prompt.m4a",
+    "hud-account-ok": "hud-account-ok.m4a",
+    "hud-account-out": "hud-account-out.m4a",
+    "hud-account-error": "hud-account-error.m4a",
+    "hud-auth-retry": "hud-auth-retry.m4a",
+    "hud-entry-extended": "hud-entry-extended.m4a"
+  },
+  "processing": {
+    "quietThresholdDb": -43,
+    "longPauseMs": 280,
+    "retainedPauseMs": 140,
+    "echoGain": 0.035,
+    "entryCueMs": 75
+  }
+}

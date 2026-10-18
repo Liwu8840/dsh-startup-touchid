@@ -1,0 +1,11 @@
+HANDOFF.md
+**/HANDOFF.md
+.env*
+*.log
+*.tgz
+.git/
+.github/
+node_modules/
+**/__pycache__/
+*.pyc
+bin/dsh-touchid

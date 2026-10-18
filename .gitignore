@@ -1,0 +1,14 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+*.log
+*.tgz
+dist/
+coverage/
+HANDOFF.md
+**/HANDOFF.md
+bin/dsh-touchid
+*.dSYM/

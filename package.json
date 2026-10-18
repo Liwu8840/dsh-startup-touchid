@@ -1,0 +1,78 @@
+{
+  "name": "dsh-startup-touchid",
+  "version": "1.6.1",
+  "description": "DeepSeek Harness 启动界面：蓝青 HUD、macOS 系统认证、真实 DeepSeek 账户状态和开机语音。密码仅由系统处理，账户昵称不写入插件配置。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek-harness-desktop",
+    "startup",
+    "splash",
+    "touchid",
+    "biometric",
+    "macos"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "test",
+    "preview/index.html",
+    "open-preview.sh",
+    "cordis.patch.yml",
+    "README.md",
+    "INSTALL.md",
+    "UPGRADE.md",
+    "DESKTOP.md",
+    "AUDIO-FIELDS.md",
+    "LICENSE",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "PRIVACY.md",
+    "ASSETS.md",
+    "!bin/dsh-touchid"
+  ],
+  "scripts": {
+    "build:helper": "sh bin/build.sh",
+    "test": "node test/smoke-host.mjs && node test/smoke-splash.mjs && node test/smoke-client.mjs && node test/smoke-biometric.mjs && node test/smoke-desktop-boot.mjs",
+    "test:audio": "python3 test/smoke-audio.py",
+    "build:audio": "python3 bin/render-hud-audio.py",
+    "test:privacy": "python3 bin/check-release.py",
+    "test:release": "npm test && npm run test:audio && npm run test:privacy"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "author": "DSH Plugin Contributors",
+  "contributors": [
+    "沈宏宏 (upstream dsh-startup-screen)"
+  ],
+  "forkedFrom": "https://github.com/6shenhonghong9/dsh-startup-screen",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Liwu8840/dsh-startup-touchid.git"
+  },
+  "homepage": "https://github.com/Liwu8840/dsh-startup-touchid#readme",
+  "bugs": {
+    "url": "https://github.com/Liwu8840/dsh-startup-touchid/issues"
+  }
+}
